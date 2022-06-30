@@ -1,8 +1,65 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import useSWR from 'swr'
+import { useSession, signIn, signOut } from "next-auth/react"
+import { getToken } from "next-auth/jwt"
+
+// function Profile () {
+//     const { data, error } = useSWR('https://api.opendota.com/api/live')
+//
+//     if (error) return <div>failed to load</div>
+//     if (!data) return <div>loading...</div>
+//
+//     // render data
+//     return <div>hello {data[0]["server_steam_id"]}!</div>
+// }
+
+function UserComp() {
+    const { data: session } = useSession()
+
+    if (session) {
+        return (
+            <>
+                Signed in as {session.user.email} <br />
+                <button onClick={() => signOut()}>Sign out</button>
+            </>
+        )
+    }
+    return (
+        <>
+            Not signed in <br />
+            <button onClick={() => signIn('twitch')}>Sign in</button>
+        </>
+    )
+}
 
 export default function Home() {
+    let dir = async () => {
+        // const dirHandle = await window.showDirectoryPicker();
+        // const promises = [];
+        // let fileHandle;
+        // let url;
+        // for await (const entry of dirHandle.values()) {
+        //     if (entry.kind !== 'file') {
+        //         break;
+        //     }
+        //     promises.push(entry.getFile().then(async (file) => {
+        //         console.log(file);
+        //         url = URL.createObjectURL(fileHandle);
+        //     }));
+        // }
+        // await Promise.all(promises);
+        // const audio = new Audio(url);
+        // audio.play().catch(console.log);
+        let [fileHandle] = await window.showOpenFilePicker();
+        let file = await fileHandle.getFile();
+        const url = URL.createObjectURL(file);
+        const audio = new Audio(url);
+        audio.volume = 0.10;
+        audio.play().catch(console.log);
+        console.log(fileHandle);
+    };
   return (
     <div className={styles.container}>
       <Head>
@@ -14,55 +71,12 @@ export default function Home() {
       <main className={styles.main}>
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
+            <button onClick={dir}>Escolher diretório</button>
+            <UserComp/>
         </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
       </main>
 
       <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
       </footer>
     </div>
   )
