@@ -21,15 +21,15 @@ function UserComp() {
     if (session) {
         return (
             <>
-                Signed in as {session.user.email} <br />
-                <button onClick={() => signOut()}>Sign out</button>
+                Conectado como {session.user.email} <br />
+                <button onClick={() => signOut()}>Desconectar</button>
             </>
         )
     }
     return (
         <>
-            Not signed in <br />
-            <button onClick={() => signIn('twitch')}>Sign in</button>
+            Não está conectado. <br />
+            <button onClick={() => signIn('twitch')}>Conectar</button>
         </>
     )
 }
@@ -70,10 +70,10 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-            <button onClick={dir}>Escolher diretório</button>
-            <UserComp/>
+          Crane 0.0.1
+            {/* <button onClick={dir}>Escolher diretório</button> */}
         </h1>
+        <p><UserComp/></p>
       </main>
 
       <footer className={styles.footer}>

@@ -1,9 +1,12 @@
 import NextAuth from "next-auth"
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
+import clientPromise from "../lib/mongodb"
 import TwitchProvider from "next-auth/providers/twitch"
 import * as dotenv from "dotenv";
 dotenv.config({path:'../../.env'});
 
 export default NextAuth({
+    adapter: MongoDBAdapter(clientPromise),
     // Configure one or more authentication providers
     providers: [
         TwitchProvider({
@@ -11,7 +14,7 @@ export default NextAuth({
         clientSecret: "fb0zwdsctidep8s3zerium1acffqsm",
         authorization: {
             params: {
-                scope: "openid user:read:email channel:manage:redemptions"
+                scope: "openid user:read:email channel:manage:redemptions channel:read:redemptions channel:manage:predictions channel:read:predictions"
             }
         }
         })
